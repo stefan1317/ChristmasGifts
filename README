@@ -1,0 +1,125 @@
+Am creat urmatoarele clase:
+
+    -> AnnualChange(package database) : Este o clasa specifica pentru schimbarile ce se efectueaza in fiecare an,
+    pe aceasta am modelat-o in functie de fisierele de input. In ea sunt doar getteri si setteri si un override metodei
+    to string.
+
+    ->AnnualChildren(package database) : Este o clasa pe care am creeat-o cu intentia de a respecta pattern-ul pentru
+    fisierele de output, in ea se vor adauga copiii din database in functie de fiecare an. In ea sunt doar getteri si
+    setteri si un override metodei to string.
+
+    ->Child(package database) : Este o clasa specifica copiilor primiti ca input. In ea am implementat urmatoarele metode:
+        ->addHistory : Aceasta metoda adauga niceScore-ul curent al copilului in lista lui de niceScore-uri precedente.
+        ->updateAge : Aceasta metoda incrementeaza varsta copilului.
+        ->updateChild : Aceasta metoda actualizeaza copilul actual in functie schimbarile anuale. In cazul in care un update
+        al unui copil are niceScore nou il actualizam si il adaugam la niceScoreHistory, apoi verificam daca in lista de
+        preferinte ale copilului sunt preferinte ce se gasesc si in cele din schimbarea anuala, in acest caz le stergem
+        din lista lui de preferinta si apoi adaugam in functie de index noile preferinte, pentru a scapa de duplicate,
+        ulterior am pus toate elementele din lista lui de preferinte intr-un set, am dat clear listei de preferinte, iar
+        apoi le-am adaugat din nou din set in lista de preferinte. Totodata elful copilului respectiv se schimba in cazul
+        in care se gaseste un alt elf in cadrul update-ului.
+        ->calculateAverageScore : Aceasta metoda calculeaza averageScore-ul copiilor in functie de varsta, daca sunt sub
+        5 ani, averageScore-ul este 10, daca varsta lor este cuprinsa intre 5 si 12 ani se face o medie aritmetica intre
+        niceScore-urile precedente, iar daca varsta este curpinsa intre 12 si 18 ani se face o medie ponderata. In final
+        am calculat averageScore-ul tinand cont de niceScoreBonus si folosind formula precizata, in cazul in care averageScore-ul
+        trece de 10, acesta se trunchiaza la 10.
+        ->calculateAssignedBudget: Metoda calculeaza bugetul asignat pentru copilul respectiv, se foloseste de ajutorul
+        mosului ce calculeaza budgetUnit, iar la acesta se inmulteste averageScore-ul curent. In final aplicam schimbarile
+        efectuate de elful copilului (elful este creat prin intermediul unui factory).
+        ->assignGift: Aceasta metoda ofera copiilor cadouri in functie de bugetul asignat acestora. Am sortat cadourile
+        in ordine crescatoare dupa pret pentru a putea oferi cadoul cu cel mai mic pret, si am cautat cadouri in functie
+        de categoriile de la preferintele copilului.
+        ->clearList: : Aceasta metoda sterge toate cadourile din lista de cadouri primite ale unui copil.
+        ->accept : Aceasta metoda este specifica design pattern-ului Visitor, accepta vizita unui vizitator.
+
+    ->ChildrenOutput(package database) : Este o clasa pe care am creeat-o cu intentia de a respecta pattern-ul pentru
+    fisierele de output. Aceasta clasa reprezinta outputul pentru fiecare copil. In ea am implementat o metoda numita
+    convert care primeste un obiect de tip child si il converteste in unul de tip ChildrenOutput.
+
+    ->ChildUpdate(package database) : Este o clasa specifica pentru schimbarile ce se efectueaza anual in ceea ce priveste
+    copiii, pe care am modelat-o in functie de fisierele de input. In ea sunt doar getteri si setteri si un override metodei
+    to string.
+
+    ->Gift(package database) : Este o clasa specifica pentru cadourile primite ca input din fisiere. In ea sunt doar getteri
+    si setteri si un override metodei to string.
+
+    ->GiftOutput(package database) : Este o clasa pe care am creeat-o cu intentia de a respecta pattern-ul pentru fisierele
+    de output. Aceasta clasa reprezinta outputul pentru fiecare cadou primit. Am implementat doar o metoda ce converteste
+    un obiect de tip Gift la unu de tip GiftOutput.
+
+    ->InitialData(package database) : Este o clasa specifica pentru datele de intrare, mai preciz lista cu copii si lista
+    cu cadourile mosului. In ea am implementat urmatoarele metode:
+        ->updateGifts : Aceasta metoda adauga in lista cu cadourile mosului, noile cadouri din AnnualChange.
+        ->updateChildren : Aceasta metoda adauga in lista cu copii, copiii noi din AnnualChange, in acelasi timp folosim
+        o functie din Utils care cauta copilul nou in database si adaugam in lista acestuia niceScore-ul actual.
+        ->updateChildrenInfo : Aceasta metoda uctualizeaza informatiile copiilor primite din AnnualChange.
+        ->addInHistory : Aceasta metoda adauga in lista de niceScoreHistory, niceScore-ul actual pentru fiecare copil
+        ->updateChildrenAverageScore : Aceasta metoda calculeaza averageScore-ul pentru fiecare copil.
+        ->updateChildrenBudget : Aceasta metoda calculeaza assignedBudget-ul pentru fiecare copil.
+        ->clearLists : Aceasta metoda sterge lista de cadouri primite pentru fiecare copil.
+        ->adjustAge : Aceasta metoda incrementeaza varsta pentru fiecare copil.
+
+    ->Input(package database) : Este o clasa specifica pentru formatul de intrare din fisire, cu ajutorul acestei clase
+    transfer datele din fisiere in databese-ul meu.
+
+    ->MyDatabase(package database) : Este o clasa ce reprezinta baza de date petru fiecare input. Este o clasa de tip
+    Singleton prin intermediul careia prelucrez datele. In ea am implementat urmatoarele metode:
+        ->assignValues : Aceasta metoda ma ajuta sa mut din clasa Input datele in database-ul meu.
+        ->updateSantaBudget : Aceasta metoda actualizeaza bugetul mosului pentru fiecare an.
+
+    ->Output(package database) : Este o clasa pe care am creeat-o cu intentia de a respecta pattern-ul pentru output-ul
+    final, reprezentat de o lista cu listele de copii din fiecare an. In ea sunt doar getteri si setteri si un override
+    metodei to string.
+
+    ->Santa(package helpers) : Este o clasa care calculeaza budgetUnit-ul pentru un an. In ea am o lista cu toate
+    averageScore-urile copiilor si o metoda calculateBudgetUnit prin care adaug averageScore-urilor copiilor sub 18 ani
+    in lista si calculez budgetUnit-ul. Totodata acesta este un visitor si prezinta o metoda ce ofera cadouri unui copil
+    primit ca parametru, metoda sorteaza cadourile crescator in functie de pret, apoi cauta in lista de preferinte a copilului
+    primul cadou din categoria preferata, verifica pretul si cantitatea, iar in cazul in care totul este bine ii ofer cadourile.
+
+    ->Visitable(package helpers) : Este o clasa abstracta specifica obiectelor de tip visitable(Child).
+
+    ->Visitor(package helpers) : Este o clasa abstracata specifica obiectelor de tip visitor(Santa).
+
+    ->BlackElf(package helpers.elfs) : Este o clasa specifica elfului negru, aceasta are o metoda ce primeste ca parametru
+    un copil al carui assignedBudget il modifica (scade cu 30%).
+
+    ->PinkElf(package helpers.elfs) : Este o clasa specifica elfului roz, aceasta are o metoda ce primeste ca parametru
+        un copil al carui assignedBudget il modifica (creste cu 30%).
+
+    ->WhiteElf(package helpers.elfs) : Este o clasa specifica elfului alb, aceasta nu face nimic :).
+
+    ->YellowElf(package helpers.elfs) : Este o clasa specifica elfului galben, aceasta are o metoda ce primeste ca parametru
+            un copil si ii ofera un cadou in cazul acesta nu a primit niciun cadou, copilul primeste cel mai ieftin cadou
+            din categoria lui preferata daca acesta este disponibil.
+
+    ->Elf(package helpers.elfs) : Este o interfata specifica obiectelor de tip Elf.(Strategy)
+
+    ->ElfFactory(package helpers.elfs) : Este o clasa ce creeaza instante de obiecte de tip Elf. (Factory)
+
+    ->FileReader(package IO) : Este o clasa ce ne ajuta sa citim datele din fisierele de intrare si sa le mapam in clasa
+    noastra de Input.
+
+    ->FileWriter(package IO) : Este o clasa ce ne ajuta sa scriem din clasa noastra de Output in fisierele de iesire.
+
+    ->IdStrategy(package strategy) : Este o clasa specifica strategiei de tip "id", aceasta are o metoda ce sorteaza copiii
+    din baza de date crescator dupa id.
+
+    ->NiceScoreCityStrategy(package strategy) : Este o clasa specifica strategiei de tip "niceScoreCity", aceasta are o metoda
+     care sorteaza orasele dupa averageScore-ul copiilor ce locuiesc acolo si apoi ofera cadouri acestora. Am luat 2 hashmap-uri,
+     in unul am bagat toate averagescorurile in functie de oras, iar in celalalt numarul de aparitii ale oraselor. In averageMap
+     am impartit ce ma retinut in countMap pentru a afla media fiecarui oras si apoi am sortat-o descrescator folosind o lista.
+
+     ->NiceScoreStrategy(package strategy) : Este o clasa specifica strategiei de tip "niceSCore", aceasta are o metoda
+     care sorteaza copiii din database crescator dupa niceScore.
+
+     ->Strategy(package strategy) : Este o interfata specifica strategiilor. (Strategy)
+
+     ->StrategyFactory(package strategy) : Este o clasa ce creeaza instante de obiecte de tip Strategy. (Factory)
+
+      ->Utils(package utils) : Este o clasa ce are niste metode statice. Metodele sunt urmatoarele:
+             ->searchChildPrim : Metoda cauta un copil dupa id.
+             ->sortGifts : Metoda sorteaza cadourile mosului in ordine crescatoare dupa pret.
+             ->sortIdOrder : Metoda sorteaza copiii din baza de date in ordine crescatoare dupa id.
+
+     ->Main(package main) : Este punctul de intrare in program.
